@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { getDatabase, ref, child, get, remove,update  } from "firebase/database";
+import { getDatabase, ref, child, get, remove, update } from "firebase/database";
 import toast from "react-hot-toast";
 import { AuthContext } from "../Providers/AuthProviders";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,7 @@ const Home = () => {
     const [data, setData] = useState({});
     const [selectedTaskId, setSelectedTaskId] = useState(null);
 
-// show task 
+    // show task 
 
     const fetchData = async () => {
         try {
@@ -33,43 +33,43 @@ const Home = () => {
 
     useEffect(() => {
         fetchData();
-        
+
         return () => {
         };
     }, []);
 
-// update task 
+    // update task 
     const handleUpdate = async (updatedTaskData) => {
         try {
-          const dbRef = ref(getDatabase(), `Tasks/${selectedTaskId}`);
-          await update(dbRef, updatedTaskData);
-          toast.success("Task updated!");
-          fetchData();
-          setSelectedTaskId(null); 
+            const dbRef = ref(getDatabase(), `Tasks/${selectedTaskId}`);
+            await update(dbRef, updatedTaskData);
+            toast.success("Task updated!");
+            fetchData();
+            setSelectedTaskId(null);
         } catch (error) {
-          console.error("Error updating task:", error);
+            console.error("Error updating task:", error);
         }
-      };
-    
-      const onSubmit = async (data) => {
-        const updateTaskItem = {
-          title: data.title,
-          email: data.email,
-          description: data.description,
-          deadline: data.deadline,
-        };
-    
-        if (selectedTaskId) {
-          handleUpdate(updateTaskItem);
-        } else {
-          toast.error("please select a task")
-        }
-      };
+    };
 
-      const handleUpdateButtonClick = (taskId) => {
+    const onSubmit = async (data) => {
+        const updateTaskItem = {
+            title: data.title,
+            email: data.email,
+            description: data.description,
+            deadline: data.deadline,
+        };
+
+        if (selectedTaskId) {
+            handleUpdate(updateTaskItem);
+        } else {
+            toast.error("please select a task")
+        }
+    };
+
+    const handleUpdateButtonClick = (taskId) => {
         setSelectedTaskId(taskId);
         document.getElementById("my_modal_5").showModal();
-      };
+    };
 
     //   delete task 
 
@@ -87,46 +87,50 @@ const Home = () => {
     return (
         <div>
             <div className="overflow-x-auto flex justify-center items-center">
-                <table className="table">
-                    {/* head */}
-                    <thead className="bg-[#a3b18a]">
-                        <tr>
-                            <th></th>
-                            <th>Task Name</th>
-                            <th>Task Details</th>
-                            <th>Due Date</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.keys(data).map((id, index) => {
-                            return (
-                                <tr key={id}>
-                                    <th>
-                                        {index + 1}
-                                    </th>
-                                    <td>
-                                        {data[id].title}
-                                    </td>
-                                    <td>
-                                        {data[id].description}
-                                    </td>
-                                    <td>
-                                        {data[id].deadline}
-                                    </td>
-                                    <td>
-                                        <button className="btn"  onClick={() => handleUpdateButtonClick(id)}> update</button>
-                                    </td>
-                                    <td>
-                                        <button onClick={() => handleDelete(id)} className="btn">delete</button>
-                                    </td>
+                {
+                    user ? <>
+                        <table className="table">
+                            {/* head */}
+                            <thead className="bg-[#a3b18a]">
+                                <tr>
+                                    <th></th>
+                                    <th>Task Name</th>
+                                    <th>Task Details</th>
+                                    <th>Due Date</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
-                            )
-                        })}
+                            </thead>
+                            <tbody>
+                                {Object.keys(data).map((id, index) => {
+                                    return (
+                                        <tr key={id}>
+                                            <th>
+                                                {index + 1}
+                                            </th>
+                                            <td>
+                                                {data[id].title}
+                                            </td>
+                                            <td>
+                                                {data[id].description}
+                                            </td>
+                                            <td>
+                                                {data[id].deadline}
+                                            </td>
+                                            <td>
+                                                <button className="btn" onClick={() => handleUpdateButtonClick(id)}> update</button>
+                                            </td>
+                                            <td>
+                                                <button onClick={() => handleDelete(id)} className="btn">delete</button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
 
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
+                    </> : <></>
+               }
             </div>
 
             <div>
@@ -140,7 +144,7 @@ const Home = () => {
                                     <label className="label">
                                         <span className="label-text text-[#444] font-semibold">Task Title*</span>
                                     </label>
-                                    <input  {...register("title", { required: true })} required   className="w-full h-12 border-2 p-4 pl-5 rounded-lg "  placeholder="Task Title..." type="text" name="title" id="title"  defaultValue={data[selectedTaskId]?.title || ""}  />
+                                    <input  {...register("title", { required: true })} required className="w-full h-12 border-2 p-4 pl-5 rounded-lg " placeholder="Task Title..." type="text" name="title" id="title" defaultValue={data[selectedTaskId]?.title || ""} />
                                 </div>
 
                                 <div className="form-control w-1/2">
@@ -159,7 +163,7 @@ const Home = () => {
                                         <label className="label">
                                             <span className="label-text text-[#444] font-semibold">Description</span>
                                         </label>
-                                        <textarea {...register("description", { required: true })} className="w-full  border-2 p-4 pl-5 rounded-lg" placeholder="Task  Description" name="description" id="description" cols="30" rows="10"  defaultValue={data[selectedTaskId]?.description || ""} ></textarea>
+                                        <textarea {...register("description", { required: true })} className="w-full  border-2 p-4 pl-5 rounded-lg" placeholder="Task  Description" name="description" id="description" cols="30" rows="10" defaultValue={data[selectedTaskId]?.description || ""} ></textarea>
                                     </div>
                                 </div>
                             </div>
