@@ -1,7 +1,45 @@
-import { Link } from "react-router-dom";
-
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../Providers/AuthProviders";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Registration = () => {
+    const { registration } = useContext(AuthContext);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const navigate = useNavigate();
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm()
+
+
+
+    const onSubmit = (data) => {
+        console.log(data)
+        registration(data.email, data.password)
+            .then((result) => {
+                const loggedUser = result.user;
+                console.log(loggedUser);
+
+                reset();
+                toast.success("You successfully register this application!")
+
+                navigate("/");
+            })
+            .catch(error => {
+                console.error(error);
+            
+            })
+
+    };
+
+
     return (
         <div className="hero min-h-screen" style={{ backgroundImage: 'url(https://img.freepik.com/free-photo/workplace-with-blue-office-supplies_23-2147843328.jpg?size=626&ext=jpg&ga=GA1.1.1546980028.1703116800&semt=ais)' }}>
             {/* <div className="hero-overlay "></div> */}
@@ -14,7 +52,7 @@ const Registration = () => {
 
 
                                 <form onSubmit={handleSubmit(onSubmit)}>
-                                  
+
 
                                     <div className="">
                                         <label className="label">

@@ -1,7 +1,44 @@
-import { Link } from "react-router-dom";
-
+import { useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../Providers/AuthProviders";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const { logIn } = useContext(AuthContext);
+
+    const handleLogin = event => {
+        event.preventDefault();
+        const form = event.target;
+        const email = form.email.value;
+        const password = form.password.value;
+
+
+        if ((email, password)) {
+            logIn(email, password)
+                .then((result) => {
+                    const user = result.user;
+                    console.log(user);
+
+                    toast.success("You successfully login!")
+
+                    navigate(location?.state ? location.state : "/")
+                    form.reset();
+                })
+
+                .catch(error => {
+                    console.error(error);
+                
+                })
+        }
+
+    }
+
     return (
         <div className="bg-white h-screen">
 

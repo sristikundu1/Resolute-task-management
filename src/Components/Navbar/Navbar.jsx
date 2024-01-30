@@ -1,7 +1,22 @@
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../../Pages/Providers/AuthProviders";
+import { useContext } from "react";
 
 
 const Navbar = () => {
+    const { user,logOut  } = useContext(AuthContext);
+
+    const handleLogOut = () => {
+        logOut()
+            .then((result) => {
+                console.log(result.user);
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+
+    }
+
     const navLinks = <>
         <ul className="flex gap-9 text-lg font-semibold" >
             <li>
@@ -24,16 +39,6 @@ const Navbar = () => {
                     Add Task
                 </NavLink>
             </li>
-            <li>
-                <NavLink
-                    to="/all-task"
-                    className={({ isActive, isPending }) =>
-                        isPending ? "pending " : isActive ? "text-[#91B029] underline italic" : ''
-                    }
-                >
-                    All Task
-                </NavLink>
-            </li>
         </ul>
     </>
 
@@ -48,10 +53,10 @@ const Navbar = () => {
                         {navLinks}
                     </ul>
                 </div>
-                <div className="flex ">
+              
 
-                    <h2 className="btn btn-ghost font-bold text-3xl text-[#004b23]">Task</h2>
-                </div>
+                    <h2 className="btn btn-ghost font-bold text-3xl text-[#004b23] mr-96">Task</h2>
+                
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
@@ -60,22 +65,22 @@ const Navbar = () => {
             </div>
             <div className="navbar-end flex flex-col lg:navbar-end lg:flex lg:flex-row ">
 
-                {/* {
+                {
                     user ? <>
 
                         <button 
-                        // onClick={handleLogOut} 
+                        onClick={handleLogOut} 
                         className="bg-[#006400]  border rounded-lg h-10 w-28 py-1 px-9 font-semibold text-white">LogOut</button>
 
                     </>
                         :
-                        <> */}
+                        <>
                            
                             <Link to="/login">
                                 <button className="btn bg-[#006400] text-white">Login</button>
                             </Link>
-                        {/* </>
-                } */}
+                        </>
+                }
             </div>
 
 
